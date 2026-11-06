@@ -1,0 +1,29 @@
+# k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: myapp-config
+  namespace: myapp
+  labels:
+    app: myapp
+data:
+  # Simple key-value pairs
+  NODE_ENV: "production"
+  LOG_LEVEL: "info"
+  APP_PORT: "3000"
+  DB_HOST: "mongo-service"
+  DB_PORT: "27017"
+  DB_NAME: "myappdb"
+  
+  # Full file as a value (config file)
+  app.config.json: |
+    {
+      "featureFlags": {
+        "newUI": true,
+        "betaFeatures": false
+      },
+      "timeouts": {
+        "request": 30,
+        "db": 10
+      }
+    }
