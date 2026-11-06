@@ -1,0 +1,40 @@
+# k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-deployment
+  namespace: myapp
+  labels:
+    app: myapp
+    tier: backend
+   
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myapp
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: myapp
+        tier: backend
+      annotations:
+        # Forces pod restart when configmap/secret changes (checksum pattern)
+        configmap-hash: "v1"
+    spec:
+      containers:
+        - name: myapp
+          image: shaikmustafa/mygame
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          
+          # ---- Load ALL keys from ConfigMap as env vars ----
+          envFrom:
+            - configMapRef:
+                name: myapp-config
+            - secretRef:
+                name: myapp-secret
